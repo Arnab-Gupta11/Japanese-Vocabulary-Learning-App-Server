@@ -3,6 +3,7 @@ import ApiError from '../../errors/ApiError';
 import { User } from './user.model';
 import { TUser } from './user.interface';
 
+//Create user into Databse
 const createUserIntoDB = async (data: TUser) => {
   const { name, email, password } = data;
 

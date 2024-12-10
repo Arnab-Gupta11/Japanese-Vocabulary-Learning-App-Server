@@ -1,12 +1,12 @@
 import express, { Application, Request, Response } from 'express';
+import globalErrorHandler from './app/middlewares/globalErrorhandler';
 
 const app: Application = express();
 //Middleware to parse incoming JSON request
 app.use(express.json());
-
+// app.use(cors());
 //Application Routes
-
-
+// app.use('/api/v1', router);
 //Base route
 app.get('/', (req: Request, res: Response) => {
   res.json({
@@ -15,12 +15,9 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-//Fallback Route: hadle all undefined routes
-app.all('*', (req: Request, res: Response) => {
-  res.status(400).json({
-    success: false,
-    message: 'Route is not Found',
-  });
-});
+app.use(globalErrorHandler);
+
+//Not Found
+// app.use(notFound);
 
 export default app;

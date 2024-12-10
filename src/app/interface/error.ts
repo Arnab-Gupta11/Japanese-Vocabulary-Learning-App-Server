@@ -8,3 +8,9 @@ export type TGenericErrorResponse = {
   message: string;
   errorSources: TErrorSources;
 };
+export type TErrorResponse = {
+  success: boolean;
+  message: string;
+  errorSources: TErrorSources;
+  stack: string;
+};

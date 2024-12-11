@@ -8,8 +8,10 @@ import { TUser } from '../user/user.interface';
 const LoginUser = async (data: Partial<TUser>) => {
   const { email, password } = data;
 
-  const user = await User.findOne({ email });
-  console.log(user);
+  const user = await User.findOne(
+    { email },
+    { createdAt: 0, updatedAt: 0, __v: 0 },
+  );
 
   if (!user) {
     throw new ApiError(404, 'Invalid credentials');

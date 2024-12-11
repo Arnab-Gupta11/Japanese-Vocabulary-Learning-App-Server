@@ -5,7 +5,7 @@ import { TUser } from './user.interface';
 
 //Create user into Databse
 const createUserIntoDB = async (data: TUser) => {
-  const { name, email, password } = data;
+  const { name, email, password, image } = data;
 
   const existUser = await User.findOne({ email });
   if (existUser) {
@@ -16,6 +16,7 @@ const createUserIntoDB = async (data: TUser) => {
     name,
     email,
     password: hasepassword,
+    image,
   });
 
   const result = await newUser.save();

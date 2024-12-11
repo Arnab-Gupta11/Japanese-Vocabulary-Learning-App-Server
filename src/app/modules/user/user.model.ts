@@ -17,6 +17,10 @@ const userSechmea = new mongoose.Schema<TUser>(
       enum: ['admin', 'user'],
       default: 'user',
     },
+    image: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,

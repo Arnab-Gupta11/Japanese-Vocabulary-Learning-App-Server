@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import ApiError from '../../errors/ApiError';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
+import { AuthenticatedRequest } from './auth.interface';
 import { AuthServices } from './auth.service';
 
 const Login = catchAsync(async (req, res) => {
@@ -28,7 +31,22 @@ const Logout = catchAsync(async (req, res) => {
     data: '',
   });
 });
+const CheckUser = async (req: AuthenticatedRequest, res: any) => {
+  const loginUser = req.user;
+
+  if (!loginUser) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User is retrived successfully',
+    data: loginUser,
+  });
+};
 export const AuthControllers = {
   Login,
   Logout,
+  CheckUser,
 };

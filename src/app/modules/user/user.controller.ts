@@ -7,7 +7,7 @@ const createUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Student is retrieved succesfully',
+    message: 'User is created succesfully',
     data: result,
   });
 });

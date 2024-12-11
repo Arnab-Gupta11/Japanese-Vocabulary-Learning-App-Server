@@ -3,7 +3,7 @@ import { TLesson } from './lesson.interface';
 import { Lesson } from './lesson.model';
 
 //Create a lesson into DB
-export const createLessonIntoDB = async (lessonData: Partial<TLesson>) => {
+const createLessonIntoDB = async (lessonData: Partial<TLesson>) => {
   const existingLesson = await Lesson.findOne({
     lessonNumber: lessonData.lessonNumber,
   });
@@ -14,12 +14,12 @@ export const createLessonIntoDB = async (lessonData: Partial<TLesson>) => {
   return await lesson.save();
 };
 //Get all lesson from DB
-export const getAllLessons = async () => {
+const getAllLessonsFromDB = async () => {
   return await Lesson.find();
 };
 
 //Updata lesson into DB
-export const updateLesson = async (id: string, data: Partial<TLesson>) => {
+const updateLessonIntoDB = async (id: string, data: Partial<TLesson>) => {
   const updatedLesson = await Lesson.findByIdAndUpdate(
     id,
     { $set: data }, // Update only provided fields
@@ -31,9 +31,15 @@ export const updateLesson = async (id: string, data: Partial<TLesson>) => {
   return updatedLesson;
 };
 //delete lesson from DB
-export const deleteLesson = async (id: string) => {
+const deleteLessonFromDB = async (id: string) => {
   const lesson = await Lesson.findByIdAndDelete(id);
   if (!lesson) {
     throw new ApiError(404, 'Lesson not found');
   }
+};
+export const LessonServices = {
+  createLessonIntoDB,
+  updateLessonIntoDB,
+  getAllLessonsFromDB,
+  deleteLessonFromDB,
 };

@@ -21,7 +21,20 @@ const getAllUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const updateUser = catchAsync(async (req, res) => {
+  // const { lessonName, lessonNumber }: TLesson = req.body;
+  const { id } = req.params;
+  const updatedUser = await UserServices.updateUserIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User updated successfully',
+    data: updatedUser,
+  });
+});
 export const userControllers = {
   createUser,
   getAllUser,
+  updateUser,
 };

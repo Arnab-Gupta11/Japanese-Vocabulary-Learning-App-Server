@@ -22,7 +22,17 @@ const createUserIntoDB = async (data: TUser) => {
   const result = await newUser.save();
   return result;
 };
-
+const updateUserIntoDB = async (id: string, data: Partial<TUser>) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { $set: data }, // Update only provided fields
+    { new: true, runValidators: true },
+  );
+  if (!updatedUser) {
+    throw new ApiError(404, 'User not found');
+  }
+  return updatedUser;
+};
 //Get all Users from DB
 const getAllUserFromDB = async () => {
   const result = await User.find({}, { password: 0 });
@@ -32,4 +42,5 @@ const getAllUserFromDB = async () => {
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
+  updateUserIntoDB,
 };

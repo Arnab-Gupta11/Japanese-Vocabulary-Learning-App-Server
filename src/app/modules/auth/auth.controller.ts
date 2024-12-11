@@ -10,7 +10,7 @@ const Login = catchAsync(async (req, res) => {
   res.cookie('token', token, {
     httpOnly: true,
     secure: false,
-    maxAge: 3600000,
+    maxAge: 3600000 * 24,
   });
   sendResponse(res, {
     statusCode: 200,

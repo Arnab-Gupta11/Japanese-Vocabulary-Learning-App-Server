@@ -25,6 +25,11 @@ const updateVocabularyInDB = async (
   const oldVocabulary = await Vocabulary.findById(id);
   if (!oldVocabulary) throw new ApiError(409, 'Vocabulary not found');
 
+  const isLessonExist = await Lesson.findOne({
+    lessonNumber: vocabularyData.lessonNo,
+  });
+  if (!isLessonExist) throw new ApiError(409, 'Lesson not found');
+
   // If the lesson number is changing, update the vocabulary count of the old and new lessons
   const oldLessonNo = oldVocabulary.lessonNo;
   const newLessonNo = vocabularyData.lessonNo;
@@ -44,7 +49,11 @@ const updateVocabularyInDB = async (
   }
 
   // Update the vocabulary entry with the new data
-  return await Vocabulary.findByIdAndUpdate(id, vocabularyData, { new: true });
+  return await Vocabulary.findByIdAndUpdate(
+    id,
+    { $set: vocabularyData }, // Update only provided fields
+    { new: true, runValidators: true },
+  );
 };
 
 const deleteVocabularyFromDB = async (id: string) => {

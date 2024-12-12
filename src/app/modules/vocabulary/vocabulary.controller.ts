@@ -5,15 +5,7 @@ import { VocabularyServices } from './vocabulary.service';
 import sendResponse from '../../utils/sendResponse';
 
 const createVocabulary = catchAsync(async (req: Request, res: Response) => {
-  const { word, pronunciation, whenToSay, lessonNo, adminEmail }: TVocabulary =
-    req.body;
-  const result = await VocabularyServices.createVocabularyIntoDB({
-    word,
-    pronunciation,
-    whenToSay,
-    lessonNo,
-    adminEmail,
-  });
+  const result = await VocabularyServices.createVocabularyIntoDB(req.body);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -23,7 +15,10 @@ const createVocabulary = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllVocabularies = catchAsync(async (req: Request, res: Response) => {
-  const vocabularies = await VocabularyServices.getAllVocabulariesFromDB();
+  const { lessonNo } = req.query;
+  const filter = lessonNo ? { lessonNo } : {};
+  const vocabularies =
+    await VocabularyServices.getAllVocabulariesFromDB(filter);
   sendResponse(res, {
     statusCode: 200,
     success: true,

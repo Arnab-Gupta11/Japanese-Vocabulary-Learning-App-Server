@@ -15,8 +15,8 @@ const createVocabularyIntoDB = async (vocabularyData: TVocabulary) => {
 
   return vocabulary;
 };
-const getAllVocabulariesFromDB = async () => {
-  return await Vocabulary.find({});
+const getAllVocabulariesFromDB = async (filter: object) => {
+  return await Vocabulary.find(filter);
 };
 const updateVocabularyInDB = async (
   id: string,

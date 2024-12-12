@@ -1,9 +1,10 @@
 import { z } from 'zod';
 
 const createVocabularyValidationSchema = z.object({
-  word: z.string().min(1, 'Word is required'), // Word must be a non-empty string
-  pronunciation: z.string().min(1, 'Pronunciation is required'), // Pronunciation must be a non-empty string
-  whenToSay: z.string().min(1, 'When to say is required'), // WhenToSay must be a non-empty string
+  word: z.string().min(1, 'Word is required').trim(), // Word must be a non-empty string
+  meaning: z.string().min(1, 'Meaning is required').trim(), // Word must be a non-empty string
+  pronunciation: z.string().min(1, 'Pronunciation is required').trim(), // Pronunciation must be a non-empty string
+  whenToSay: z.string().min(1, 'When to say is required').trim(), // WhenToSay must be a non-empty string
   lessonNo: z
     .string()
     .trim() // Trims whitespace
@@ -12,9 +13,14 @@ const createVocabularyValidationSchema = z.object({
 });
 
 const updateVocabularyValidationSchema = z.object({
-  word: z.string().min(1, 'Word is required').optional(), // Optional word field
-  pronunciation: z.string().min(1, 'Pronunciation is required').optional(), // Optional pronunciation field
-  whenToSay: z.string().min(1, 'When to say is required').optional(), // Optional whenToSay field
+  word: z.string().min(1, 'Word is required').trim().optional(), // Optional word field
+  meaning: z.string().min(1, 'Word is required').trim().optional(), // Optional word field
+  pronunciation: z
+    .string()
+    .min(1, 'Pronunciation is required')
+    .trim()
+    .optional(), // Optional pronunciation field
+  whenToSay: z.string().min(1, 'When to say is required').trim().optional(), // Optional whenToSay field
   lessonNo: z
     .string()
     .trim() // Trims whitespace

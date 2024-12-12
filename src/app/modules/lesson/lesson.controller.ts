@@ -42,12 +42,12 @@ const updateLesson = catchAsync(async (req, res) => {
 });
 const getSingleLesson = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const updatedLesson = await LessonServices.getSingleLessonFromDB(id);
+  const lesson = await LessonServices.getSingleLessonFromDB(id);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Lesson retrived successfully',
-    data: updatedLesson,
+    data: lesson,
   });
 });
 

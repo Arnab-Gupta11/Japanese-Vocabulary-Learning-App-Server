@@ -12,6 +12,8 @@ router.post(
   VocabularyController.createVocabulary,
 );
 router.get('/', VocabularyController.getAllVocabularies);
+router.get('/:id', VocabularyController.getSingleVocabulary);
+router.get('/paginate/:lessonNo', VocabularyController.getPaginatedVocabularies);
 router.patch(
   '/:id',
   validateRequest(VocabularyValidations.updateVocabularyValidationSchema),

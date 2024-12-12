@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
-import { TVocabulary } from './vocabulary.interface';
 import { VocabularyServices } from './vocabulary.service';
 import sendResponse from '../../utils/sendResponse';
 
@@ -27,17 +26,45 @@ const getAllVocabularies = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateVocabulary = catchAsync(async (req: Request, res: Response) => {
-  const { word, pronunciation, whenToSay, lessonNo, adminEmail }: TVocabulary =
-    req.body;
+const getSingleVocabulary = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const updatedVocabulary = await VocabularyServices.updateVocabularyInDB(id, {
-    word,
-    pronunciation,
-    whenToSay,
-    lessonNo,
-    adminEmail,
+  const vocabulary = await VocabularyServices.getSingleVocabularyFromDB(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Vocabulary retrived successfully',
+    data: vocabulary,
   });
+});
+//Pagination vocabullary
+const getPaginatedVocabularies = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const { lessonNo } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 1;
+
+    const result = await VocabularyServices.getPaginatedVocabulariesFromDB(
+      lessonNo,
+      page,
+      limit,
+    );
+
+    res.status(200).json({
+      success: true,
+      data: result.vocabularies,
+      total: result.totalVocabularies,
+      currentPage: page,
+      totalPages: result.totalPages,
+    });
+  },
+);
+
+const updateVocabulary = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updatedVocabulary = await VocabularyServices.updateVocabularyInDB(
+    id,
+    req.body,
+  );
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -62,4 +89,6 @@ export const VocabularyController = {
   getAllVocabularies,
   updateVocabulary,
   deleteVocabulary,
+  getSingleVocabulary,
+  getPaginatedVocabularies,
 };

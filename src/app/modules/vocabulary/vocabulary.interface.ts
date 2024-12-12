@@ -6,3 +6,8 @@ export type TVocabulary = {
   lessonNo: string;
   adminEmail: string;
 };
+export type TPaginatedResult = {
+  vocabularies: TVocabulary[];
+  totalVocabularies: number;
+  totalPages: number;
+};

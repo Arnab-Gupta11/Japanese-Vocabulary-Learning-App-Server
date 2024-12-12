@@ -1,6 +1,6 @@
 import ApiError from '../../errors/ApiError';
 import { Lesson } from '../lesson/lesson.model';
-import { TVocabulary } from './vocabulary.interface';
+import { TPaginatedResult, TVocabulary } from './vocabulary.interface';
 import { Vocabulary } from './vocabulary.model';
 
 const createVocabularyIntoDB = async (vocabularyData: TVocabulary) => {
@@ -15,9 +15,40 @@ const createVocabularyIntoDB = async (vocabularyData: TVocabulary) => {
 
   return vocabulary;
 };
+//get Single Vocabulary
+const getSingleVocabularyFromDB = async (id: string) => {
+  const user = await Vocabulary.findById(id);
+  if (!user) {
+    throw new ApiError(404, 'Vocabulary not found');
+  }
+  return user;
+};
 const getAllVocabulariesFromDB = async (filter: object) => {
   return await Vocabulary.find(filter);
 };
+//Pagination
+const getPaginatedVocabulariesFromDB = async (
+  lessonNo: string,
+  page: number,
+  limit: number,
+): Promise<TPaginatedResult> => {
+  try {
+    const vocabularies = await Vocabulary.find({ lessonNo })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalVocabularies = await Vocabulary.countDocuments({ lessonNo });
+
+    return {
+      vocabularies,
+      totalVocabularies,
+      totalPages: Math.ceil(totalVocabularies / limit),
+    };
+  } catch (error) {
+    throw new Error('Error fetching vocabularies: ' + (error as Error).message);
+  }
+};
+
 const updateVocabularyInDB = async (
   id: string,
   vocabularyData: Partial<TVocabulary>,
@@ -28,7 +59,7 @@ const updateVocabularyInDB = async (
   const isLessonExist = await Lesson.findOne({
     lessonNumber: vocabularyData.lessonNo,
   });
-  if (!isLessonExist) throw new ApiError(409, 'Lesson not found');
+  if (!isLessonExist) throw new ApiError(409, 'Lesson No not found');
 
   // If the lesson number is changing, update the vocabulary count of the old and new lessons
   const oldLessonNo = oldVocabulary.lessonNo;
@@ -77,4 +108,6 @@ export const VocabularyServices = {
   getAllVocabulariesFromDB,
   updateVocabularyInDB,
   deleteVocabularyFromDB,
+  getSingleVocabularyFromDB,
+  getPaginatedVocabulariesFromDB,
 };

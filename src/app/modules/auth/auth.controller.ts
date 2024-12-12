@@ -9,8 +9,8 @@ const Login = catchAsync(async (req, res) => {
   const { token, user } = await AuthServices.LoginUser(req.body);
   res.cookie('token', token, {
     httpOnly: true,
-    secure: false,
-    maxAge: 3600000 * 24,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
   });
   sendResponse(res, {
     statusCode: 200,
@@ -23,7 +23,11 @@ const Login = catchAsync(async (req, res) => {
   });
 });
 const Logout = catchAsync(async (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', {
+    maxAge: 0,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+  });
   sendResponse(res, {
     statusCode: 200,
     success: true,

@@ -6,14 +6,19 @@ import router from './app/routes';
 import notFound from './app/middlewares/notFound';
 const app: Application = express();
 //Middleware to parse incoming JSON request
+const corsOptions = {
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://dictionary-app12.netlify.app',
+    'https://dictionary-app-63471.web.app',
+  ],
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    credentials: true,
-    origin: 'http://localhost:5173',
-  }),
-);
+app.use(cors(corsOptions));
 //Application Routes
 app.use('/api/v1', router);
 //Base route

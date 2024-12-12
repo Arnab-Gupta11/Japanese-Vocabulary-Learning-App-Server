@@ -24,7 +24,9 @@ const LoginUser = async (data: Partial<TUser>) => {
   if (!ispassaowrdValid) {
     throw new ApiError(404, 'Password is Wrong!');
   }
-  const token = jwt.sign({ userId: user._id }, config.jwt_secret as string);
+  const token = jwt.sign({ userId: user._id }, config.jwt_secret as string, {
+    expiresIn: '365d',
+  });
   return { token, user };
 };
 export const AuthServices = {

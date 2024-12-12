@@ -8,9 +8,9 @@ const createLessonValidationSchema = z.object({
     .min(1, 'Lesson name is required') // Ensures non-empty value
     .max(100, 'Lesson name must be less than or equal to 100 characters'),
   lessonNumber: z
-    .number()
-    .int('Lesson number must be an integer')
-    .positive('Lesson number must be a positive value'),
+    .string()
+    .trim() // Trims whitespace
+    .min(1, 'Lesson number is required'),
   vocabularyCount: z
     .number()
     .int('Vocabulary count must be an integer')
@@ -26,9 +26,9 @@ const updateLessonValidationSchema = z
       .max(100, 'Lesson name must be less than or equal to 100 characters')
       .optional(), // Optional for patch
     lessonNumber: z
-      .number()
-      .int('Lesson number must be an integer')
-      .positive('Lesson number must be a positive value')
+      .string()
+      .trim() // Trims whitespace
+      .min(1, 'Lesson number is required')
       .optional(), // Optional for patch
     vocabularyCount: z
       .number()

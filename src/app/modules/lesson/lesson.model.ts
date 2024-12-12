@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { TLesson } from './lesson.interface';
+import { Vocabulary } from '../vocabulary/vocabulary.model';
 
 const LessonSchema = new mongoose.Schema(
   {
@@ -9,7 +10,7 @@ const LessonSchema = new mongoose.Schema(
       unique: true,
     },
     lessonNumber: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
@@ -20,5 +21,12 @@ const LessonSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
+// Middleware to delete vocabularies associated with a lesson
+LessonSchema.pre('findOneAndDelete', async function (next) {
+  const lesson = await this.model.findOne(this.getFilter());
+  if (lesson) {
+    await Vocabulary.deleteMany({ lessonNo: lesson.lessonNumber });
+  }
+  next();
+});
 export const Lesson = mongoose.model<TLesson>('Lesson', LessonSchema);

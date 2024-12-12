@@ -13,6 +13,7 @@ router.post(
   LessonController.createLesson,
 );
 router.get('/', LessonController.getAllLessons);
+router.get('/:id', LessonController.getSingleLesson);
 router.patch(
   '/:id',
   validateRequest(lessonValidationSchemas.updateLessonValidationSchema),

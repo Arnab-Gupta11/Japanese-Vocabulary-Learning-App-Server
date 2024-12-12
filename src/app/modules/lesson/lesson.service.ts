@@ -1,4 +1,5 @@
 import ApiError from '../../errors/ApiError';
+import { Vocabulary } from '../vocabulary/vocabulary.model';
 import { TLesson } from './lesson.interface';
 import { Lesson } from './lesson.model';
 
@@ -17,18 +18,48 @@ const createLessonIntoDB = async (lessonData: Partial<TLesson>) => {
 const getAllLessonsFromDB = async () => {
   return await Lesson.find();
 };
-
+//get single User
+const getSingleLessonFromDB = async (id: string) => {
+  const user = await Lesson.findOne({ lessonNumber: id });
+  if (!user) {
+    throw new ApiError(404, 'Lesson not found');
+  }
+  return user;
+};
 //Updata lesson into DB
 const updateLessonIntoDB = async (id: string, data: Partial<TLesson>) => {
+  // Find the existing lesson
+  const existingLesson = await Lesson.findById(id);
+  if (!existingLesson) throw new Error('Lesson not found');
+
+  const { lessonNumber: newLessonNumber } = data;
+  const oldLessonNumber = existingLesson.lessonNumber;
+
+  // Update the lesson details
   const updatedLesson = await Lesson.findByIdAndUpdate(
     id,
     { $set: data }, // Update only provided fields
     { new: true, runValidators: true },
   );
-  if (!updatedLesson) {
-    throw new ApiError(404, 'Lesson not found');
+
+  // If the lesson number has been updated, update all vocabularies that refer to this lesson
+  if (newLessonNumber && newLessonNumber !== oldLessonNumber) {
+    await Vocabulary.updateMany(
+      { lessonNo: oldLessonNumber },
+      { lessonNo: newLessonNumber },
+    );
   }
+
   return updatedLesson;
+  // const updatedLesson = await Lesson.findByIdAndUpdate(
+  //   id,
+  //   { $set: data }, // Update only provided fields
+  //   { new: true, runValidators: true },
+  // );
+  // if (!updatedLesson) {
+  //   throw new ApiError(404, 'Lesson not found');
+  // }
+  // return updatedLesson;
 };
 //delete lesson from DB
 const deleteLessonFromDB = async (id: string) => {
@@ -42,4 +73,5 @@ export const LessonServices = {
   updateLessonIntoDB,
   getAllLessonsFromDB,
   deleteLessonFromDB,
+  getSingleLessonFromDB,
 };

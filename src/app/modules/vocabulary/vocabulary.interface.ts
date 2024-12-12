@@ -2,6 +2,6 @@ export type TVocabulary = {
   word: string;
   pronunciation: string;
   whenToSay: string;
-  lessonNo: number;
+  lessonNo: string;
   adminEmail: string;
 };

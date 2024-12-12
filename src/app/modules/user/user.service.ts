@@ -33,6 +33,7 @@ const updateUserIntoDB = async (id: string, data: Partial<TUser>) => {
   }
   return updatedUser;
 };
+
 //Get all Users from DB
 const getAllUserFromDB = async () => {
   const result = await User.find({}, { password: 0 });
